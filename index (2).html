@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catatan Harian Magang</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f4ef;--card:#fff;--tx:#1f2a2e;--mut:#6b7780;--ac:#1f6f6b;--bd:#e3ded3;--ac2:#e8f2f0}
+:root[data-theme="dark"]{--bg:#161b1d;--card:#1f2629;--tx:#e8eceb;--mut:#95a3a8;--ac:#4fb3ad;--bd:#2f3a3e;--ac2:#22363a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161b1d;--card:#1f2629;--tx:#e8eceb;--mut:#95a3a8;--ac:#4fb3ad;--bd:#2f3a3e;--ac2:#22363a}}
+*,*:before,*:after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.7rem;margin:.2em 0}
+.sub{color:var(--mut);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:1.5rem;color:var(--ac)}
+.stat span{font-size:.8rem;color:var(--mut)}
+.bar{height:8px;background:var(--ac2);border-radius:99px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--ac);width:0}
+label{display:block;font-size:.85rem;color:var(--mut);margin:10px 0 4px}
+input,select,textarea{width:100%;font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:9px}
+textarea{min-height:80px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+button{font:inherit;cursor:pointer;border:0;border-radius:8px;padding:9px 16px;background:var(--ac);color:#fff}
+button.g{background:transparent;color:var(--mut);border:1px solid var(--bd)}
+.acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tools input,.tools select{flex:1;min-width:140px;width:auto}
+h2{font-size:1.05rem;margin:22px 0 8px;color:var(--ac)}
+.e{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:10px}
+.e h3{margin:0 0 2px;font-size:1rem}
+.meta{font-size:.8rem;color:var(--mut)}
+.tag{display:inline-block;background:var(--ac2);color:var(--ac);border-radius:99px;padding:1px 10px;font-size:.75rem;margin-left:6px}
+.e p{margin:8px 0 0;white-space:pre-wrap}
+.l{margin-top:8px;padding-top:8px;border-top:1px dashed var(--bd);font-size:.92rem}
+.mini{display:flex;gap:12px;margin-top:8px}
+.mini button{padding:0;background:none;color:var(--mut);font-size:.8rem;text-decoration:underline}
+.empty{text-align:center;color:var(--mut);padding:30px 0}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1>📓 Catatan Harian Magang</h1><p class="sub">Rekam kegiatan, pelajaran, dan progres selama 6 bulan magang.</p></div>
+    <button class="g" id="theme" title="Ganti tema">🌓</button>
+  </div>
+
+  <div class="card">
+    <label>Tanggal mulai magang</label>
+    <input type="date" id="start">
+    <div class="stats" style="margin:14px 0 0">
+      <div class="stat"><b id="sN">0</b><span>Catatan</span></div>
+      <div class="stat"><b id="sH">0</b><span>Total jam</span></div>
+      <div class="stat"><b id="sD">–</b><span>Hari ke-</span></div>
+      <div class="stat"><b id="sR">–</b><span>Sisa hari</span></div>
+    </div>
+    <div class="bar"><i id="pb"></i></div>
+  </div>
+
+  <div class="card">
+    <h2 id="ft" style="margin-top:0">Catatan Baru</h2>
+    <div class="row">
+      <div><label>Tanggal</label><input type="date" id="d"></div>
+      <div><label>Durasi (jam)</label><input type="number" id="h" min="0" max="24" step="0.5" value="8"></div>
+    </div>
+    <label>Judul kegiatan</label>
+    <input id="t" placeholder="Contoh: Membuat laporan penjualan mingguan">
+    <div class="row">
+      <div><label>Kategori</label>
+        <select id="c"><option>Tugas Utama</option><option>Rapat</option><option>Pelatihan</option><option>Proyek</option><option>Administrasi</option><option>Lainnya</option></select></div>
+      <div><label>Mood</label>
+        <select id="m"><option>😀</option><option>🙂</option><option>😐</option><option>😓</option></select></div>
+    </div>
+    <label>Deskripsi kegiatan</label>
+    <textarea id="x" placeholder="Apa yang kamu kerjakan hari ini?"></textarea>
+    <label>Yang dipelajari / kendala</label>
+    <textarea id="l" placeholder="Ilmu baru, kesulitan, atau rencana besok"></textarea>
+    <div class="acts"><button id="save">Simpan</button><button class="g" id="cancel" hidden>Batal</button></div>
+  </div>
+
+  <div class="tools">
+    <input id="q" placeholder="🔍 Cari catatan...">
+    <select id="fm"><option value="">Semua bulan</option></select>
+    <select id="fc"><option value="">Semua kategori</option><option>Tugas Utama</option><option>Rapat</option><option>Pelatihan</option><option>Proyek</option><option>Administrasi</option><option>Lainnya</option></select>
+  </div>
+  <div id="list"></div>
+</div>
+
+<script>
+var KEY="magang-v1",S={start:"",items:[]},editId=null;
+function load(){try{var r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)}catch(e){}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var BLN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+function fmt(d){var p=d.split("-");return new Date(d+"T00:00").toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
+function today(){var n=new Date();return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0")}
+
+function stats(){
+  $("sN").textContent=S.items.length;
+  var h=0;S.items.forEach(function(i){h+=+i.h||0});$("sH").textContent=h;
+  if(S.start){
+    var s=new Date(S.start+"T00:00"),e=new Date(s);e.setMonth(e.getMonth()+6);
+    var tot=Math.round((e-s)/864e5),now=Math.round((new Date(today()+"T00:00")-s)/864e5)+1;
+    var pct=Math.max(0,Math.min(100,now/tot*100));
+    $("sD").textContent=Math.max(0,Math.min(now,tot));
+    $("sR").textContent=Math.max(0,tot-now);
+    $("pb").style.width=pct+"%";
+  }
+}
+function months(){
+  var set={};S.items.forEach(function(i){set[i.d.slice(0,7)]=1});
+  var cur=$("fm").value,k=Object.keys(set).sort().reverse();
+  $("fm").innerHTML='<option value="">Semua bulan</option>'+k.map(function(m){var p=m.split("-");return'<option value="'+m+'">'+BLN[+p[1]-1]+" "+p[0]+"</option>"}).join("");
+  $("fm").value=cur;
+}
+function render(){
+  stats();months();
+  var q=$("q").value.toLowerCase(),fm=$("fm").value,fc=$("fc").value;
+  var a=S.items.filter(function(i){
+    return(!fm||i.d.indexOf(fm)===0)&&(!fc||i.c===fc)&&(!q||(i.t+i.x+i.l).toLowerCase().indexOf(q)>-1)
+  }).sort(function(a,b){return b.d.localeCompare(a.d)});
+  if(!a.length){$("list").innerHTML='<div class="empty">Belum ada catatan. Tulis kegiatan pertamamu di atas ✍️</div>';return}
+  var out="",last="";
+  a.forEach(function(i){
+    var m=i.d.slice(0,7);
+    if(m!==last){var p=m.split("-");out+="<h2>"+BLN[+p[1]-1]+" "+p[0]+"</h2>";last=m}
+    out+='<div class="e"><h3>'+i.m+" "+esc(i.t)+'<span class="tag">'+esc(i.c)+'</span></h3><div class="meta">'+fmt(i.d)+" · "+i.h+" jam</div>"
+      +(i.x?"<p>"+esc(i.x)+"</p>":"")+(i.l?'<div class="l"><b>💡 Pelajaran:</b> '+esc(i.l)+"</div>":"")
+      +'<div class="mini"><button data-e="'+i.id+'">Edit</button><button data-x="'+i.id+'">Hapus</button></div></div>';
+  });
+  $("list").innerHTML=out;
+}
+function reset(){editId=null;$("t").value=$("x").value=$("l").value="";$("d").value=today();$("h").value=8;$("ft").textContent="Catatan Baru";$("cancel").hidden=true}
+$("save").onclick=function(){
+  var t=$("t").value.trim();if(!t||!$("d").value){alert("Isi tanggal dan judul kegiatan dulu ya.");return}
+  var o={id:editId||Date.now().toString(36),d:$("d").value,h:+$("h").value||0,t:t,c:$("c").value,m:$("m").value,x:$("x").value.trim(),l:$("l").value.trim()};
+  if(editId){S.items=S.items.map(function(i){return i.id===editId?o:i})}else S.items.push(o);
+  persist();reset();render();
+};
+$("cancel").onclick=reset;
+$("list").onclick=function(e){
+  var id=e.target.getAttribute("data-x");
+  if(id&&confirm("Hapus catatan ini?")){S.items=S.items.filter(function(i){return i.id!==id});persist();render();return}
+  id=e.target.getAttribute("data-e");
+  if(id){var i=S.items.filter(function(i){return i.id===id})[0];editId=id;
+    $("d").value=i.d;$("h").value=i.h;$("t").value=i.t;$("c").value=i.c;$("m").value=i.m;$("x").value=i.x;$("l").value=i.l;
+    $("ft").textContent="Edit Catatan";$("cancel").hidden=false;window.scrollTo({top:0,behavior:"smooth"})}
+};
+$("start").onchange=function(){S.start=this.value;persist();stats()};
+["q","fm","fc"].forEach(function(i){$(i).oninput=render});
+$("theme").onclick=function(){
+  var r=document.documentElement,dark=r.getAttribute("data-theme")==="dark"||(!r.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme:dark)").matches);
+  r.setAttribute("data-theme",dark?"light":"dark");
+};
+load();$("start").value=S.start||"";$("d").value=today();render();
+</script>
+</body>
+</html>
